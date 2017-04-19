@@ -17,12 +17,15 @@ public class ServerMain {
 	private static TCPServer server;
 	private static final Object LOCK = new Object();
 	private static ArrayList<File> toSend = new ArrayList<>();
+	private static int answered = 0;
+	private static int clients = 0;
 
 	public static void main(String[] args) {
 		server = new TCPServer(1337, new TCPConnectionCallback() {
 			@Override
 			public void clientConnected(ClientData event) {
 				TCPConnection client = (TCPConnection) event.getConnection();
+				clients++;
 				try {
 					System.out.println(client.readObject());
 					while (!event.getConnection().isClosed()) {
@@ -34,12 +37,22 @@ public class ServerMain {
 							client.getOutputStream().writeFile(file);
 						}
 						DataPackage back = (DataPackage) client.getInputStream().readObject();
+						answered++;
 						System.out.println(back.getObjects()[0] + ": " + back.getObjects()[1]);
+
+						System.out.println("Answered: " + answered + "/" + clients);
+						if (answered == clients) {
+							answered = 0;
+							Runtime.getRuntime().exec("say \"Hey Phil, wake up!\"");
+							System.out.println("Everyone answered!");
+						}
 					}
 				} catch (EOFException | SocketException e) {
 					return;
 				} catch (InterruptedException | IOException | ClassNotFoundException e) {
 					e.printStackTrace();
+				} finally {
+					clients--;
 				}
 			}
 		});
