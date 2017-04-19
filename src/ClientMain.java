@@ -9,8 +9,8 @@ import org.jnetwork.TCPConnection;
 public class ClientMain {
 	public static void main(String[] args) {
 		try {
-			TCPConnection client = new TCPConnection("192.168.7.88", 1337);
-			// TCPConnection client = new TCPConnection("localhost", 1337);
+			// TCPConnection client = new TCPConnection("192.168.7.88", 1337);
+			TCPConnection client = new TCPConnection("localhost", 1337);
 			Scanner in = new Scanner(System.in);
 			System.out.print("Enter your username: ");
 			String username = in.nextLine();

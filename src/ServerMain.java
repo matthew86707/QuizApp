@@ -40,11 +40,11 @@ public class ServerMain {
 						answered++;
 						System.out.println(back.getObjects()[0] + ": " + back.getObjects()[1]);
 
-						System.out.println("Answered: " + answered + "/" + clients);
 						if (answered == clients) {
 							answered = 0;
 							Runtime.getRuntime().exec("say \"Hey Phil, wake up!\"");
 							System.out.println("Everyone answered!");
+							System.out.println();
 						}
 					}
 				} catch (EOFException | SocketException e) {
