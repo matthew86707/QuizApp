@@ -1,14 +1,16 @@
 package com.jtl.quiz.graphics;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -17,8 +19,8 @@ public class GraphicsManager {
 
 	// Window stuff
 	private static final String WINDOW_TITLE = "JTL Quiz App";
-	private static final int WINDOW_SIZE_X = 800;
-	private static final int WINDOW_SIZE_Y = 600;
+	private static final int WINDOW_SIZE_X = 1200;
+	private static final int WINDOW_SIZE_Y = 900;
 	private static JFrame window;
 
 	// Graphics Panel stuff
@@ -27,13 +29,13 @@ public class GraphicsManager {
 	// Text
 	private static String status = "Awaiting First Question";
 	private static String currentPlayer = "Undefined";
-	private static String currentOptions = "";
 
 	// Confirm button
 	public static final int CONFIRM_X = 600;
 	public static final int CONFIRM_Y = 500;
 	public static final int CONFIRM_SIZE_X = 100;
 	public static final int CONFIRM_SIZE_Y = 30;
+	public static final Object ANSWERS_ENTERED_BLOCK = new Object();
 
 	// Bitmaps
 	public static BufferedImage heart;
@@ -56,41 +58,56 @@ public class GraphicsManager {
 	private static JPanel superPanel;
 
 	public static void setupWindow() {
+		JPanel masterPanel = new JPanel(null);
+
 		panel = new GraphicsPanel();
 		panel.setBackground(new Color(255, 255, 255));
 		panel.addMouseListener(new MouseHandler());
+		panel.setSize(new Dimension(1200, 600));
+		masterPanel.add(panel);
 
 		GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST,
 				GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0);
-		superPanel = new JPanel(new GridLayout());
-		superPanel.add(panel, c);
-		c.gridy++;
+		superPanel = new JPanel(new GridBagLayout());
+
 		for (int i = 0; i < 6; i++) {
 			superPanel.add(new JCheckBox(Character.toString((char) (65 + i))), c);
 			c.gridy++;
 		}
 
+		JButton button = new JButton("Confirm");
+		button.addActionListener((e) -> {
+			synchronized (ANSWERS_ENTERED_BLOCK) {
+				ANSWERS_ENTERED_BLOCK.notifyAll();
+			}
+		});
+		superPanel.add(button, c);
+		superPanel.setBounds(10, 610, superPanel.getPreferredSize().width, superPanel.getPreferredSize().height);
+
 		setChoicesVisible(false);
 
-		window.setContentPane(superPanel);
+		masterPanel.add(superPanel);
 		panel.revalidate();
 		panel.repaint();
+
+		window.getContentPane().add(masterPanel);
 	}
 
 	public static void setChoicesVisible(boolean b) {
 		for (int i = 0; i < 6; i++) {
-			JCheckBox box = (JCheckBox) superPanel.getComponent(i + 1);
+			JCheckBox box = (JCheckBox) superPanel.getComponent(i);
 			if (!b) {
 				box.setSelected(false);
 			}
 			box.setVisible(b);
 		}
+		superPanel.getComponent(6).setVisible(b);
 	}
 
 	public static String getChoices() {
 		String choices = "";
 		for (int i = 0; i < 6; i++) {
-			JCheckBox box = (JCheckBox) superPanel.getComponent(i + 1);
+			JCheckBox box = (JCheckBox) superPanel.getComponent(i);
 			if (box.isSelected()) {
 				choices += box.getText();
 			}

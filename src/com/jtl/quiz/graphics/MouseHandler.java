@@ -2,9 +2,6 @@ package com.jtl.quiz.graphics;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.security.AllPermission;
-
-import org.jnetwork.DataPackage;
 
 import com.jtl.quiz.main.ClientMain;
 import com.jtl.quiz.model.Heart;
@@ -12,8 +9,6 @@ import com.jtl.quiz.model.Option;
 import com.jtl.quiz.model.Player;
 
 public class MouseHandler implements MouseListener{
-	
-	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 	    int x=e.getX();

@@ -189,7 +189,7 @@ public class ServerMain {
 								for (File file : chooser.getSelectedFiles()) {
 									toSend.add(file);
 								}
-								System.out.print("Before we send the question, please input the correct answers : ");
+								System.out.print("Before we send the question, please input the correct answers: ");
 								answers = in.nextLine().toUpperCase().split("");
 								synchronized (LOCK) {
 									LOCK.notifyAll();

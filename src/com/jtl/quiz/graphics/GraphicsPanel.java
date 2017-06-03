@@ -21,8 +21,8 @@ public class GraphicsPanel extends JPanel {
 		try {
 			super.paintComponent(g);
 			g.setColor(Color.BLACK);
-			g.drawString("Status : " + GraphicsManager.getStatus(), 350, 20);
-			g.drawString("Playing As : " + GraphicsManager.getCurrentPlayer(), 600, 20);
+			g.drawString("Status: " + GraphicsManager.getStatus(), 350, 20);
+			g.drawString("Playing As: " + GraphicsManager.getCurrentPlayer(), 600, 20);
 
 			if (currentImage != null) {
 				System.out.println("i am drawing a beautiful image");
@@ -65,7 +65,7 @@ public class GraphicsPanel extends JPanel {
 				}
 			}
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
 

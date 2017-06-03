@@ -2,7 +2,6 @@ package com.jtl.quiz.main;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -65,6 +64,13 @@ public class ClientMain {
 				// Collect answers and send them in a data package with our
 				// current player object
 				GraphicsManager.setChoicesVisible(true);
+				synchronized (GraphicsManager.ANSWERS_ENTERED_BLOCK) {
+					try {
+						GraphicsManager.ANSWERS_ENTERED_BLOCK.wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
 				String answers = GraphicsManager.getChoices();
 				client.getOutputStream().writeObject(new DataPackage(me, answers));
 				// Get servers version of all clients for rendering
