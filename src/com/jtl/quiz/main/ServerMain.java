@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JFileChooser;
+import javax.swing.UIManager;
 
 import org.jnetwork.ClientData;
 import org.jnetwork.DataPackage;
@@ -20,7 +21,7 @@ import org.jnetwork.TCPServer;
 
 import com.jtl.quiz.model.Player;
 
-public class ServerMain {
+public class ServerMain implements TCPConnectionCallback {
 	private static TCPServer server;
 	private static final Object LOCK = new Object();
 	private static ArrayList<File> toSend = new ArrayList<>();
@@ -32,54 +33,17 @@ public class ServerMain {
 	static Thread mainServerThread;
 
 	public static void main(String[] args) {
-		server = new TCPServer(1337, new TCPConnectionCallback() {
-			@Override
-			public void clientConnected(ClientData event) {
-				TCPConnection client = (TCPConnection) event.getConnection();
-				clients++;
-				try {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-					Player newPlayer = (Player) client.readObject();
-					System.out.println(newPlayer.name + " connected.");
-					newPlayer.con = client;
-					Player.allPlayers.add(newPlayer);
+		ServerUI.initialize();
+		ServerUI.log("Initialized QSAP. Hello, World!");
 
-					while (!event.getConnection().isClosed()) {
-						synchronized (LOCK) {
-							LOCK.wait();
-						}
-						client.getOutputStream().writeInt(toSend.size());
-						for (File file : toSend) {
-							client.getOutputStream().writeFile(file);
-						}
-						boolean isCorrect = false;
-						DataPackage back = (DataPackage) client.getInputStream().readObject();
-						Player p = (Player) back.getObjects()[0];
-						for (Player ply : Player.allPlayers) {
-							if (ply.name.equals(p.name)) {
-								if (checkAnswer(back.getObjects()[1].toString().toUpperCase())) {
-
-									answeredCorrect = answeredCorrect + 1;
-
-									isCorrect = true;
-									ply.place = ServerMain.answeredCorrect;
-								}
-							}
-						}
-						answered++;
-						System.out.println(p.name + ": " + back.getObjects()[1]
-								+ (isCorrect ? " <- Correct, Place : " + answeredCorrect : ""));
-						isCorrect = false;
-					}
-				} catch (EOFException | SocketException e) {
-					return;
-				} catch (InterruptedException | IOException | ClassNotFoundException e) {
-					e.printStackTrace();
-				} finally {
-					clients--;
-				}
-			}
-		});
+		server = new TCPServer(1337, new ServerMain());
+		ServerUI.log("Started server on port 1337.");
 
 		mainServerThread = new Thread(new Runnable() {
 			@Override
@@ -115,8 +79,8 @@ public class ServerMain {
 							// windows...
 							// Runtime.getRuntime().exec("say \"Hey Phil, wake
 							// up!\"");
-							System.out.println("Everyone answered!");
-							System.out.println();
+							ServerUI.log("Everyone answered!");
+							ServerUI.log();
 							currentState = ServerState.AWAITING_SELECTION;
 						}
 
@@ -129,11 +93,6 @@ public class ServerMain {
 										for (Player p : Player.allPlayers) {
 											p.con.writeObject(player);
 										}
-									} catch (IOException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-									try {
 										Player toSave = (Player) player.con.getInputStream().readObject();
 										for (int j = 0; j < Player.allPlayers.size(); j++) {
 											if (Player.allPlayers.get(j).name.equals(toSave.name)) {
@@ -144,7 +103,6 @@ public class ServerMain {
 											}
 										}
 									} catch (ClassNotFoundException | IOException e) {
-										// TODO Auto-generated catch block
 										e.printStackTrace();
 									}
 									sendPlayersInfo();
@@ -154,11 +112,9 @@ public class ServerMain {
 						}
 
 						for (Player player : Player.allPlayers) {
-
 							try {
 								player.con.getOutputStream().writeObject(new String("Done"));
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -212,7 +168,7 @@ public class ServerMain {
 	public static void sendPlayersInfo() {
 		Player[] players = new Player[Player.allPlayers.size()];
 		for (int i = 0; i < players.length; i++) {
-			// System.out.println("" + Player.allPlayers.get(i).name +
+			// ServerUI.log("" + Player.allPlayers.get(i).name +
 			// "...Hearts = " + Player.allPlayers.get(i).hearts.size());
 			players[i] = Player.allPlayers.get(i);
 		}
@@ -251,5 +207,52 @@ public class ServerMain {
 
 	private enum ServerState {
 		AWAITING_ANSWERS, AWAITING_SELECTION
+	}
+
+	@Override
+	public void clientConnected(ClientData event) {
+		TCPConnection client = (TCPConnection) event.getConnection();
+		clients++;
+		try {
+
+			Player newPlayer = (Player) client.readObject();
+			ServerUI.log(newPlayer.name + " connected.");
+			newPlayer.con = client;
+			Player.allPlayers.add(newPlayer);
+
+			while (!event.getConnection().isClosed()) {
+				synchronized (LOCK) {
+					LOCK.wait();
+				}
+				client.getOutputStream().writeInt(toSend.size());
+				for (File file : toSend) {
+					client.getOutputStream().writeFile(file);
+				}
+				boolean isCorrect = false;
+				DataPackage back = (DataPackage) client.getInputStream().readObject();
+				Player p = (Player) back.getObjects()[0];
+				for (Player ply : Player.allPlayers) {
+					if (ply.name.equals(p.name)) {
+						if (checkAnswer(back.getObjects()[1].toString().toUpperCase())) {
+
+							answeredCorrect = answeredCorrect + 1;
+
+							isCorrect = true;
+							ply.place = ServerMain.answeredCorrect;
+						}
+					}
+				}
+				answered++;
+				ServerUI.log(p.name + ": " + back.getObjects()[1]
+						+ (isCorrect ? " (Correct), Answered in place: " + answeredCorrect : " (Incorrect)"));
+				isCorrect = false;
+			}
+		} catch (EOFException | SocketException e) {
+			return;
+		} catch (InterruptedException | IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			clients--;
+		}
 	}
 }
