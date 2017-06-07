@@ -26,6 +26,7 @@ import com.jtl.quiz.model.Player;
 public class IssueQuestionUI {
 	private static JCheckBox[] checkBoxes = new JCheckBox[6];
 	private static File file;
+	private static File lastFolder;
 
 	public static void initialize() {
 		JDialog frame = new JDialog(ServerUI.MASTER_FRAME, "QSAP: Issue Question");
@@ -35,12 +36,13 @@ public class IssueQuestionUI {
 
 		JLabel preview = new JLabel();
 
-		JFileChooser fileChooser = new JFileChooser();
+		JFileChooser fileChooser = new JFileChooser(lastFolder);
 		fileChooser.getComponent(4).setVisible(false);
 		fileChooser.addActionListener((e) -> {
 			String name = fileChooser.getSelectedFile().getName();
 			if (name.endsWith("png") || name.endsWith("jpg") || name.endsWith("jpeg") || name.endsWith("gif")) {
 				try {
+					lastFolder = fileChooser.getSelectedFile().getParentFile();
 					file = fileChooser.getSelectedFile();
 					BufferedImage image = ImageIO.read(fileChooser.getSelectedFile());
 					Image scaled = image.getScaledInstance(image.getWidth() * (int) (400 / (double) image.getHeight()),
