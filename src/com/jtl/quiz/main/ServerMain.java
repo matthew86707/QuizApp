@@ -22,13 +22,13 @@ import org.jnetwork.TCPServer;
 import com.jtl.quiz.model.Player;
 
 public class ServerMain implements TCPConnectionCallback {
-	private static TCPServer server;
+	public static TCPServer server;
 	private static final Object LOCK = new Object();
 	private static ArrayList<File> toSend = new ArrayList<>();
-	private static int answered = 0;
-	private static int answeredCorrect = 0;
+	public static int answered = 0;
+	public static int answeredCorrect = 0;
 	private static int clients = 0;
-	private static String[] answers;
+	public static String[] answers;
 	private static ServerState currentState = ServerState.AWAITING_ANSWERS;
 	static Thread mainServerThread;
 
