@@ -1,11 +1,9 @@
 package com.jtl.quiz.model;
 
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jnetwork.Connection;
 import org.jnetwork.TCPConnection;
 
 public class Player implements Serializable{
