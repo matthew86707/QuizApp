@@ -25,7 +25,7 @@ public class GraphicsPanel extends JPanel {
 			g.drawString("Playing As: " + GraphicsManager.getCurrentPlayer(), 600, 20);
 
 			if (currentImage != null) {
-				g.drawImage(currentImage, 100, 50, 600, 600, this);
+				g.drawImage(currentImage, 100, 50, 600, 550, this);
 			} else {
 				int yStart = Player.STATIC_OFFSET_Y;
 				for (Player player : Player.allPlayers) {
