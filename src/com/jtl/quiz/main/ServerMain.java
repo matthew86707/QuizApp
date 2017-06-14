@@ -19,6 +19,7 @@ import org.jnetwork.TCPConnection;
 import org.jnetwork.TCPConnectionCallback;
 import org.jnetwork.TCPServer;
 
+import com.jtl.quiz.graphics.ServerUI;
 import com.jtl.quiz.model.Player;
 
 public class ServerMain implements TCPConnectionCallback {

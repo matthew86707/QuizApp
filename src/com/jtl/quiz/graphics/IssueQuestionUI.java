@@ -1,4 +1,4 @@
-package com.jtl.quiz.main;
+package com.jtl.quiz.graphics;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -21,6 +21,7 @@ import org.jnetwork.ClientData;
 import org.jnetwork.DataPackage;
 import org.jnetwork.TCPConnection;
 
+import com.jtl.quiz.main.ServerMain;
 import com.jtl.quiz.model.Player;
 
 public class IssueQuestionUI {

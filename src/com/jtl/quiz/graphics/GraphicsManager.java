@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -16,7 +17,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class GraphicsManager {
-
 	// Window stuff
 	private static final String WINDOW_TITLE = "JTL Quiz App";
 	private static final int WINDOW_SIZE_X = 1200;
@@ -28,21 +28,19 @@ public class GraphicsManager {
 
 	// Text
 	private static String status = "Awaiting First Question";
-	private static String currentPlayer = "Undefined";
+	private static String currentPlayer = "fidget spinner";
 
 	// Confirm button
-	public static final int CONFIRM_X = 600;
+	public static final int CONFIRM_X = 750;
 	public static final int CONFIRM_Y = 500;
 	public static final int CONFIRM_SIZE_X = 100;
 	public static final int CONFIRM_SIZE_Y = 30;
 	public static final Object ANSWERS_ENTERED_BLOCK = new Object();
 
-	// Bitmaps
-	public static BufferedImage heart;
-	public static BufferedImage confirm;
+	private static HashMap<String, BufferedImage> cachedImages = new HashMap<>();
 
 	public static void init() {
-		loadBitmaps();
+		loadBitmap("confirm");
 		createWindow();
 		setupWindow();
 	}
@@ -115,12 +113,18 @@ public class GraphicsManager {
 		return choices;
 	}
 
-	public static void loadBitmaps() {
+	public static BufferedImage loadBitmap(String name) {
 		try {
-			heart = ImageIO.read(new File("res/heart.png"));
-			confirm = ImageIO.read(new File("res/confirm.png"));
+			BufferedImage temp = cachedImages.get(name);
+			if (temp != null) {
+				return temp;
+			}
+			temp = ImageIO.read(new File("res/" + name + ".png"));
+			cachedImages.put(name, temp);
+			return temp;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return null;
 		}
 	}
 

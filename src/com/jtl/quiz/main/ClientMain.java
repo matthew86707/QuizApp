@@ -12,9 +12,11 @@ import org.jnetwork.TCPConnection;
 import com.jtl.quiz.graphics.GraphicsManager;
 import com.jtl.quiz.graphics.GraphicsPanel;
 import com.jtl.quiz.graphics.SpinPanel;
+import com.jtl.quiz.model.Heart;
 import com.jtl.quiz.model.Option;
 import com.jtl.quiz.model.OptionSet;
 import com.jtl.quiz.model.Player;
+import com.jtl.quiz.model.Shield;
 
 public class ClientMain {
 	public static boolean goodSpin = false;
@@ -103,17 +105,19 @@ public class ClientMain {
 						// server says your in
 						if (player.place == 3) {
 							currentOptions = new OptionSet();
-							currentOptions.options.add(new Option(-1, 1.0f, "-1 Heart"));
+							currentOptions.options.add(new Option(new Heart(-1), 1.0f, "-1 Heart"));
 							GraphicsManager.getCurrentWindow().repaint();
 						} else if (player.place == 2) {
 							currentOptions = new OptionSet();
-							currentOptions.options.add(new Option(1, 0.5f, "50% Chance +1 Heart"));
-							currentOptions.options.add(new Option(-1, 1.0f, "-1 Heart"));
+							currentOptions.options.add(new Option(new Heart(1), 0.5f, "50% Chance +1 Heart"));
+							currentOptions.options.add(new Option(new Shield(), 1.0f, "+1 Shield"));
+							currentOptions.options.add(new Option(new Heart(-1), 1.0f, "-1 Heart"));
 							GraphicsManager.getCurrentWindow().repaint();
 						} else if (player.place == 1) {
 							currentOptions = new OptionSet();
-							currentOptions.options.add(new Option(1, 1.0f, "+1 Heart"));
-							currentOptions.options.add(new Option(-2, 1.0f, "-2 Hearts"));
+							currentOptions.options.add(new Option(new Heart(1), 1.0f, "+1 Heart"));
+							currentOptions.options.add(new Option(new Heart(10), 0.05f, "5% Chance +10 Hearts"));
+							currentOptions.options.add(new Option(new Heart(-2), 1.0f, "-2 Hearts"));
 							GraphicsManager.getCurrentWindow().repaint();
 						}
 

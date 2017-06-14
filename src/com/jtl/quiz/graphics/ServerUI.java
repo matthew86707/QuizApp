@@ -1,4 +1,4 @@
-package com.jtl.quiz.main;
+package com.jtl.quiz.graphics;
 
 import java.awt.Color;
 import java.awt.Font;

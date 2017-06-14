@@ -33,8 +33,9 @@ public class GraphicsPanel extends JPanel {
 					g.drawString(player.name, 40, yStart);
 					g.setColor(Color.RED);
 					for (int i = 0; i < player.hearts.size(); i++) {
-						g.drawImage(GraphicsManager.heart, Heart.STATIC_OFFSET_X + (i * Heart.OFFSET_X),
-								yStart + Heart.STATIC_OFFSET_Y, Heart.SIZE_X, Heart.SIZE_Y, this);
+						g.drawImage(GraphicsManager.loadBitmap(player.hearts.get(i).getResource()),
+								Heart.STATIC_OFFSET_X + (i * Heart.OFFSET_X), yStart + Heart.STATIC_OFFSET_Y,
+								Heart.SIZE_X, Heart.SIZE_Y, this);
 					}
 					yStart += Player.OFFSET_Y;
 				}
@@ -59,8 +60,8 @@ public class GraphicsPanel extends JPanel {
 					}
 					g.setColor(Color.BLACK);
 					if (ClientMain.finalOption == null) {
-						g.drawImage(GraphicsManager.confirm, GraphicsManager.CONFIRM_X, GraphicsManager.CONFIRM_Y,
-								this);
+						g.drawImage(GraphicsManager.loadBitmap("confirm"), GraphicsManager.CONFIRM_X,
+								GraphicsManager.CONFIRM_Y, this);
 					}
 				}
 			}
