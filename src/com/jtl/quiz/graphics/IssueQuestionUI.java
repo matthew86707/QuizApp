@@ -111,7 +111,19 @@ public class IssueQuestionUI {
 					}).start();
 				}
 				ServerUI.log("Image located at " + file.getAbsolutePath() + " sent.");
-				file = null;
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(1000);
+							file = null;
+							ServerUI.log("Ready to send the next question.");
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}).start();
+
 				frame.dispose();
 			}
 		});

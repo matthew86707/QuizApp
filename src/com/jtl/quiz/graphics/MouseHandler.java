@@ -44,7 +44,6 @@ public class MouseHandler implements MouseListener {
 							}
 						}
 					}
-
 				}
 			} else {
 				for (int i = 0; i < Player.allPlayers.size(); i++) {
@@ -76,7 +75,7 @@ public class MouseHandler implements MouseListener {
 							&& y < GraphicsManager.CONFIRM_Y + GraphicsManager.CONFIRM_SIZE_Y) {
 
 						if (ClientMain.currentOption.chance != 1.0f) {
-							SpinWindow sp = new SpinWindow(0);
+							SpinWindow sp = new SpinWindow();
 							sp.spin();
 						}
 

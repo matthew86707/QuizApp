@@ -6,7 +6,7 @@ public class SpinWindow extends JFrame {
 	private static final long serialVersionUID = 1348725683029402987L;
 	public static JFrame current;
 
-	public SpinWindow(int seed) {
+	public SpinWindow() {
 		super("Spining...");
 		setSize(310, 320);
 		setVisible(true);

@@ -105,19 +105,30 @@ public class ClientMain {
 						// server says your in
 						if (player.place == 3) {
 							currentOptions = new OptionSet();
-							currentOptions.options.add(new Option(new Heart(-1), 1.0f, "-1 Heart"));
+							if (player.hearts.size() > 0)
+								currentOptions.options.add(new Option(new Heart(-1), 1.0f, "-1 Heart"));
 							GraphicsManager.getCurrentWindow().repaint();
 						} else if (player.place == 2) {
 							currentOptions = new OptionSet();
 							currentOptions.options.add(new Option(new Heart(1), 0.5f, "50% Chance +1 Heart"));
-							currentOptions.options.add(new Option(new Shield(), 1.0f, "+1 Shield"));
-							currentOptions.options.add(new Option(new Heart(-1), 1.0f, "-1 Heart"));
+
+							if (player.hearts.size() > 0) {
+								currentOptions.options.add(new Option(new Shield(), 1.0f, "+1 Shield"));
+								currentOptions.options.add(new Option(new Heart(-1), 1.0f, "-1 Heart"));
+							}
+
 							GraphicsManager.getCurrentWindow().repaint();
 						} else if (player.place == 1) {
 							currentOptions = new OptionSet();
 							currentOptions.options.add(new Option(new Heart(1), 1.0f, "+1 Heart"));
-							currentOptions.options.add(new Option(new Heart(10), 0.05f, "5% Chance +10 Hearts"));
-							currentOptions.options.add(new Option(new Heart(-2), 1.0f, "-2 Hearts"));
+							// currentOptions.options.add(new Option(new
+							// Heart(10), 0.05f, "5% Chance +10 Hearts"));
+
+							if (player.hearts.size() > 0) {
+								currentOptions.options.add(new Option(new Heart(-2), 1.0f, "-2 Hearts"));
+								currentOptions.options.add(new Option(new Heart(-4), 0.5f, "50% Chance -4 Hearts"));
+							}
+
 							GraphicsManager.getCurrentWindow().repaint();
 						}
 
